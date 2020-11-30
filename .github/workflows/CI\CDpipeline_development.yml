@@ -17,3 +17,26 @@ jobs:
           java-version: 1.8
       - name: build maven
         run: mvn -B package --file pom.xml
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: docker login
+        env: 
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - name: build docker image
+        run: docker build ./Dockerfile -t dockerfile
+      - name: Push to Docker Hub
+        env: 
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
+        uses: docker/build-push-action@v1
+        with:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+          repository: mattiaswaem/bs2-labo6:latest
+          tag_with_ref: true
