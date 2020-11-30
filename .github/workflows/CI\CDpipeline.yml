@@ -21,6 +21,4 @@ jobs:
 
 
 
-      - name: tomcat deploy
-        run: curl -v -u admin:admin "dockerfilenaam"
-     
+
